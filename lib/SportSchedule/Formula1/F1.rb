@@ -75,7 +75,7 @@ class FormulaOne
 		FormulaOne.create_event_from_collection
 		FormulaOne.all.each do |obj|
 			if(obj.date.day == day_of_month && obj.date.month == month)
-				puts "#{obj.event_name} #{obj.date}"
+				puts "#{obj.event_name} on #{obj.date}"
 			end
 		end
 	end
@@ -85,7 +85,7 @@ class FormulaOne
 		FormulaOne.create_event_from_collection
 		FormulaOne.all.each do |obj|
 			if(obj.date.day == date.day && obj.date.month == date.month)
-				puts "#{obj.event_name} #{obj.date}"
+				puts "#{obj.event_name} on #{obj.date}"
 			end
 		end
 	end
@@ -121,5 +121,9 @@ end
 #end
 #p FormulaOne.all.size
 #FormulaOne.create_event_from_collection.size
-FormulaOne.find_event_by_date("2021-12-12")
+#FormulaOne.find_event_by_date("2021-12-12")
 #p FormulaOne.parse_race_weekend
+FormulaOne.create_event_from_collection
+ FormulaOne.all_f1_events_by_date.each do |event|
+	 puts "#{event[0]}: #{event[1]}"
+ end
