@@ -17,8 +17,7 @@ class SoccerApi
 		request["x-rapidapi-host"] = 'api-football-v1.p.rapidapi.com'
 		request["x-rapidapi-key"] = api_key
 		response = http.request(request)
-
-
+		response = JSON.parse(response.body.gsub("=>", ":").gsub(":nil,", ":null,"))
 	end
 	# date parameter format: "yyyy-month-day_of_month"
 	def self.fixtures(date,league_id)
@@ -32,18 +31,18 @@ class SoccerApi
 		top_leagues=[140,78,39,135]
 		top_leagues.each do |league_id|
 		self.fixtures(date,league_id)
-		self.create_matches_from_collection(@@fixtures)
+		self.display_matches_for_a_specific_fixture(@@fixtures)
 		end
 	end
 
 	def self.display_matches_for_a_specific_fixture(fixture)
 		response = SoccerApi.establish_connection(fixture)
 		if(response['response'].length > 0 && response['response'][0] != nil)
-		puts response['response'][0]['league']['name']
-		response['response'].each do |team|
+			puts response['response'][0]['league']['name']
+			response['response'].each do |team|
 			puts"#{team['teams']['home']['name']} vs #{team['teams']['away']['name']}"
+			end
 		end
-	end
 		puts
 	end
 
