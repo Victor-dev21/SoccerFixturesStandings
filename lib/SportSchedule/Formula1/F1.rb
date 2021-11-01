@@ -121,10 +121,10 @@ end
 #end
 #p FormulaOne.all.size
 #FormulaOne.create_event_from_collection.size
-#FormulaOne.find_event_by_date("2021-12-12")
+FormulaOne.find_event_by_date("2021-12-12")
 #p FormulaOne.parse_race_weekend
 #FormulaOne.create_event_from_collection
- #FormulaOne.all_f1_events_by_date.each do |event|
-	# puts "#{event[0]}: #{event[1]}"
+#FormulaOne.all_f1_events_by_date.each do |event|
+# puts "#{event[0]}: #{event[1]}"
  #end
- p FormulaOne.parse_race_weekend
+ #p FormulaOne.parse_race_weekend

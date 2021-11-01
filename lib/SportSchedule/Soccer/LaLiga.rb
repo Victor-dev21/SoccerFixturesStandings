@@ -1,32 +1,25 @@
-require_relative 'SoccerScraper'
-require_relative 'LaLigaParser'
-class LaLiga
+require 'uri'
+require 'net/http'
+require 'openssl'
+require 'json'
+require 'date'
 
-	@@hash = Hash.new.compare_by_identity
+url = URI("https://api-football-v1.p.rapidapi.com/v3/fixtures?date=2021-10-31&league=140&season=2021")
+path = ENV['SOCCER_API']
+api_key = File.open(path).read
 
-	def self.hash
-		@@hash
-	end
+http = Net::HTTP.new(url.host, url.port)
+http.use_ssl = true
+http.verify_mode = OpenSSL::SSL::VERIFY_NONE
 
-	def self.parse_matchday_date
-	hash = Hash.new.compare_by_identity
-	SoccerScraper.scrape_date_from_matchday.each do |date|
-		date = date.split(" ")
-				hash[date[0]] = date[1].to_i
-		end
-		hash
-	end
+request = Net::HTTP::Get.new(url)
+request["x-rapidapi-host"] = 'api-football-v1.p.rapidapi.com'
+request["x-rapidapi-key"] = api_key
 
-	def self.create_hash_from_collection
-		collection = SoccerScraper.scrape_date_from_matchday
-		collection.each do |date|
-			LaLigaParser.parse_date_array(date,self.hash)
-		end
-		self.hash
-	end
-	#start from the current date
-
-end
-LaLiga.create_hash_from_collection.each do |key,value|
-		puts "#{key} : #{value}"
-end
+response = http.request(request)
+response = JSON.parse(response.body.gsub("=>", ":").gsub(":nil,", ":null,"))
+puts JSON.pretty_generate(response)
+puts
+#puts JSON.pretty_generate(response['response'][2]['teams']['home']['name'])
+#puts JSON.pretty_generate(response['response'][2]['teams']['away']['name'])
+puts JSON.pretty_generate(response['response'])
