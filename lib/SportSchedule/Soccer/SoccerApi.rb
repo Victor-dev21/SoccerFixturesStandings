@@ -131,4 +131,4 @@ puts"--------------------------------"
 #puts SoccerApi.teams_to_id.length
 #puts JSON.pretty_generate(response['response'][2]['teams']['home']['name'])
 #puts JSON.pretty_generate(response['response'][2]['teams']['away']['name'])
-#SoccerApi.display_remaining_games_for_a_team("Barcelona")
+SoccerApi.display_remaining_games_for_a_team("Barcelona")
