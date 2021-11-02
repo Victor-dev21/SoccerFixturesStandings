@@ -1,4 +1,5 @@
 # SportSchedule
+<<<<<<< HEAD
 
 Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/SportSchedule`. To experiment with that code, run `bin/console` for an interactive prompt.
 
@@ -41,3 +42,6 @@ The gem is available as open source under the terms of the [MIT License](https:/
 ## Code of Conduct
 
 Everyone interacting in the SportSchedule project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/<github username>/SportSchedule/blob/master/CODE_OF_CONDUCT.md).
+=======
+Lists sporting events happening on a specific date
+>>>>>>> 64034779a8e1f3ac533994a650603cbf6e276c91
