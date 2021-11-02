@@ -8,10 +8,19 @@ class SoccerApi
 	@@fixtures
 	@@teams
 	@@teams_to_id = Hash.new
+	@@top_four_leagues_id=[140,78,39,135]
+	LaLiga = 140
+	Premier_League = 39
+	Bundesliga = 78
+	SerieA = 135
 
 	def self.teams_to_id
 		@@teams_to_id
 	end
+	def self.top_four_leagues_id
+		@@top_four_leagues_id
+	end
+	#fix method names
 
 	def self.establish_connection(url)
 		path = ENV['SOCCER_API']
@@ -25,24 +34,23 @@ class SoccerApi
 		response = http.request(request)
 		response = JSON.parse(response.body.gsub("=>", ":").gsub(":nil,", ":null,"))
 	end
-	# date parameter format: "yyyy-month-day_of_month"
+	# date parameter format: "year-month-day"
 	def self.fixtures(date,league_id)
 		current_season = Date.today.year
 		url = URI("https://api-football-v1.p.rapidapi.com/v3/fixtures?date=#{date}&league=#{league_id}&season=#{current_season}")
 		@@fixtures = url
 	end
-	# date parameter format: "yyyy-month-day_of_month"
+	# date parameter format: "year-month-day"
 	# only from top four european leagues
-	def self.display_all_matches_for_a_specific_date(date)
-		top_leagues=[140,78,39,135]
-		top_leagues.each do |league_id|
+	def self.display_fixtures_by_date_date(date)
+		top_four_leagues_id.each do |league_id|
 		self.fixtures(date,league_id)
-		self.display_matches_for_a_specific_fixture(@@fixtures)
+		self.display_fixtures(@@fixtures)
 		end
 	end
-
-	def self.display_matches_for_a_specific_fixture(fixture)
-		response = SoccerApi.establish_connection(fixture)
+	# fixtures is a url endpoint
+	def self.display_fixtures(endpoint)
+		response = SoccerApi.establish_connection(endpoint)
 		if(response['response'].length > 0 && response['response'][0] != nil)
 			puts response['response'][0]['league']['name']
 			response['response'].each do |team|
@@ -51,31 +59,36 @@ class SoccerApi
 		end
 		puts
 	end
+	def self.display_remaining_games_for_a_team(team_name)
+		SoccerApi.link_teams_to_id
+		id = find_team_id_from_team_name(team_name)
+		todays_date = Date.today.to_s
+		url = URI("https://api-football-v1.p.rapidapi.com/v3/fixtures?league=140&season=2021&&team=#{id}&from=#{todays_date}&to=2022-06-05")
+		fixtures_left = SoccerApi.establish_connection(url)
+		fixtures_left['response'].each do |team|
+			puts"#{team['teams']['home']['name']} vs #{team['teams']['away']['name']}: #{}"
+		end
 
-	def self.pair_team_name_with_id
-		top_leagues=[140,78,39,135]
-		top_leagues.each do |league_id|
+	end
+	def self.link_teams_to_id
+		top_four_leagues_id.each do |league_id|
 			self.teams(league_id)
 			create_hash_for_teams_id(@@teams)
-			self.display_team_with_id
 		end
 	end
 
 	def self.create_hash_for_teams_id(teams_by_league_url)
-
 		response = self.establish_connection(teams_by_league_url)
 		response['response'].each do |team|
 			@@teams_to_id[team['team']['name']] = team['team']['id']
 		end
-		@@teams_to_id
 	end
 
-	def self.display_team_with_id
+	def self.display_teams_with_id
 		@@teams_to_id.each do |team,team_id|
 			puts "#{team}: #{team_id}"
 		end
 	end
-
 
 	def self.teams(league_id)
 		current_season = Date.today.year
@@ -87,19 +100,35 @@ class SoccerApi
 		response = JSON.parse(response.body.gsub("=>", ":").gsub(":nil,", ":null,"))
 		puts JSON.pretty_generate(response)
 	end
-end
+
 
 def self.fixture_by_team_name(team_name)
 	#searches for id by team-name
-	url = URI("https://api-football-v1.p.rapidapi.com/v3/leagues?id=39")
+	id = find_team_id_from_team_name(team_name)
+	url = URI("https://api-football-v1.p.rapidapi.com/v3/leagues?id=#{id}")
+	fixtures = SoccerApi.establish_connection(url)
 end
 # return the team_id from input
 def self.find_team_id_from_team_name(team_name)
+	@@teams_to_id.each do |name,id|
+		if(name == team_name)
+			return id
+		end
+	end
+end
 end
 
 #response = SoccerApi.establish_connection(SoccerApi.fixtures("2021-10-31","140"))
-#SoccerApi.display_all_matches_for_a_specific_date("2021-11-06")
-#puts SoccerApi.pair_team_name_with_id.length
+#SoccerApi.display_all_matches_for_top_four_leagues_for_a_specific_date("2021-11-07")
+#fixture = SoccerApi.fixtures("2021-11-06",SoccerApi::LaLiga)
+#SoccerApi.display_matches_by_league(fixture)
+puts"--------------------------------"
+#p SoccerApi.teams_to_id
+#SoccerApi.display_teams_with_id
+#SoccerApi.link_teams_to_id
+#p SoccerApi.find_team_id_from_team_name("Barcelona")
+#p SoccerApi.find_team_id_from_team_name("Manchester United")
 #puts SoccerApi.teams_to_id.length
 #puts JSON.pretty_generate(response['response'][2]['teams']['home']['name'])
 #puts JSON.pretty_generate(response['response'][2]['teams']['away']['name'])
+SoccerApi.display_remaining_games_for_a_team("Barcelona")
