@@ -54,20 +54,22 @@ class SoccerApi
 		if(response['response'].length > 0 && response['response'][0] != nil)
 			puts response['response'][0]['league']['name']
 			response['response'].each do |team|
-			puts"#{team['teams']['home']['name']} vs #{team['teams']['away']['name']}"
+			puts"#{team['teams']['home']['name']} vs #{team['teams']['away']['name']} Date:#{team['fixture']['date'][0,10]}"
 			end
 		end
 		puts
 	end
-	def self.display_remaining_games_for_a_team(team_name)
+
+	def self.fixtures_by_team(team_name)
 		SoccerApi.link_teams_to_id
 		id = find_team_id_from_team_name(team_name)
 		todays_date = Date.today.to_s
-		url = URI("https://api-football-v1.p.rapidapi.com/v3/fixtures?league=140&season=2021&&team=#{id}&from=#{todays_date}&to=2022-06-05")
-		fixtures_left = SoccerApi.establish_connection(url)
-		fixtures_left['response'].each do |team|
-			puts"#{team['teams']['home']['name']} vs #{team['teams']['away']['name']}"
-		end
+		url = URI("https://api-football-v1.p.rapidapi.com/v3/fixtures?season=2021&&team=#{id}&from=#{todays_date}&to=2022-06-05")
+		#fixtures_left = SoccerApi.establish_connection(url)
+		display_fixtures(url)
+		#fixtures_left['response'].each do |team|
+		#	puts"#{team['teams']['home']['name']} vs #{team['teams']['away']['name']}"
+		#end
 
 	end
 	def self.link_teams_to_id
@@ -102,20 +104,32 @@ class SoccerApi
 	end
 
 
-def self.fixture_by_team_name(team_name)
-	#searches for id by team-name
-	id = find_team_id_from_team_name(team_name)
-	url = URI("https://api-football-v1.p.rapidapi.com/v3/leagues?id=#{id}")
-	fixtures = SoccerApi.establish_connection(url)
-end
-# return the team_id from input
-def self.find_team_id_from_team_name(team_name)
-	@@teams_to_id.each do |name,id|
-		if(name == team_name)
-			return id
+	# return the team_id from input
+	def self.find_team_id_from_team_name(team_name)
+		@@teams_to_id.each do |name,id|
+			if(name == team_name)
+				return id
+			end
 		end
 	end
-end
+	def self.latest_fixtures_by_league(league_id)
+		current_season = Date.today.year
+		current_round = URI("https://api-football-v1.p.rapidapi.com/v3/fixtures/rounds?league=#{league_id}&season=2021&current=true")
+		current_round = SoccerApi.establish_connection(current_round)['response'][0]
+		url = URI("https://api-football-v1.p.rapidapi.com/v3/fixtures?league=#{league_id}&season=2021&round=#{current_round}")
+		display_fixtures(url)
+	end
+	def self.reamining_fixtures_by_league(league_id)
+		current_season = Date.today.year
+		todays_date = Date.today.to_s
+		league = URI("https://api-football-v1.p.rapidapi.com/v3/fixtures?league=#{league_id}&season=#{current_season}&from=#{todays_date}&to=2022-06-05")
+		SoccerApi.establish_connection(league)
+		#display_fixtures(league)
+	end
+
+	def self.sort_by_date
+
+	end
 end
 
 #response = SoccerApi.establish_connection(SoccerApi.fixtures("2021-10-31","140"))
@@ -131,4 +145,6 @@ end
 #puts SoccerApi.teams_to_id.length
 #puts JSON.pretty_generate(response['response'][2]['teams']['home']['name'])
 #puts JSON.pretty_generate(response['response'][2]['teams']['away']['name'])
-#SoccerApi.display_remaining_games_for_a_team("Barcelona")
+#SoccerApi.fixtures_by_team("Barcelona")
+#SoccerApi.latest_fixtures_by_league(SoccerApi::LaLiga)
+#SoccerApi.all_fixtures_by_league(SoccerApi::LaLiga)
