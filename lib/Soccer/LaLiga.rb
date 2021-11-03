@@ -11,12 +11,12 @@ class LaLiga
 		@@all_LaLiga_fixtures << self
 	end
 	def self.all_LaLiga_fixtures
-		self.create_matches_from_collection
+		#self.create_matches_from_collection(league_id)
 		@@all_LaLiga_fixtures
 	end
 
-	def self.create_matches_from_collection
-		response = SoccerApi.reamining_fixtures_by_league(SoccerApi::LaLiga)
+	def self.create_matches_from_collection(league_id)
+		response = SoccerApi.reamining_fixtures_by_league(league_id)
 		if(response['response'].length > 0 && response['response'][0] != nil)
 			response['response'].each do |team|
 				home_team = team['teams']['home']['name']
@@ -27,8 +27,15 @@ class LaLiga
 		end
 	end
 
-	def self.display_latest_fixtures
-		SoccerApi.latest_fixtures_by_league(SoccerApi::LaLiga)
+	def self.search_upcoming_fixtures_by_team(team_name)
+		fixtures = self.all_LaLiga_fixtures.select{|team|team.home_team == team_name || team.away_team == team_name}
+		fixtures.each do |match|
+		puts "#{match.home_team} vs #{match.away_team} : #{match.date}"
+		end
+	end
+
+	def self.display_latest_fixtures(league_id)
+		SoccerApi.latest_fixtures_by_league(league_id)
 	end
 
 	def self.display_remaining_fixtures
@@ -37,5 +44,6 @@ class LaLiga
 		end
 	end
 end
-#p LaLiga.create_matches_from_collection
+LaLiga.create_matches_from_collection(SoccerApi::LaLiga)
 #LaLiga.display_remaining_fixtures
+LaLiga.search_upcoming_fixtures_by_team("Barcelona")
