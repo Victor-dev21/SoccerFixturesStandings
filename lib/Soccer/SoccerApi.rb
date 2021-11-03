@@ -20,7 +20,7 @@ class SoccerApi
 	def self.top_four_leagues_id
 		@@top_four_leagues_id
 	end
-	#fix method names
+
 
 	def self.establish_connection(url)
 		path = ENV['SOCCER_API']
@@ -66,7 +66,7 @@ class SoccerApi
 		url = URI("https://api-football-v1.p.rapidapi.com/v3/fixtures?league=140&season=2021&&team=#{id}&from=#{todays_date}&to=2022-06-05")
 		fixtures_left = SoccerApi.establish_connection(url)
 		fixtures_left['response'].each do |team|
-			puts"#{team['teams']['home']['name']} vs #{team['teams']['away']['name']}: #{}"
+			puts"#{team['teams']['home']['name']} vs #{team['teams']['away']['name']}"
 		end
 
 	end
@@ -122,7 +122,7 @@ end
 #SoccerApi.display_all_matches_for_top_four_leagues_for_a_specific_date("2021-11-07")
 #fixture = SoccerApi.fixtures("2021-11-06",SoccerApi::LaLiga)
 #SoccerApi.display_matches_by_league(fixture)
-puts"--------------------------------"
+#puts"--------------------------------"
 #p SoccerApi.teams_to_id
 #SoccerApi.display_teams_with_id
 #SoccerApi.link_teams_to_id
@@ -131,4 +131,4 @@ puts"--------------------------------"
 #puts SoccerApi.teams_to_id.length
 #puts JSON.pretty_generate(response['response'][2]['teams']['home']['name'])
 #puts JSON.pretty_generate(response['response'][2]['teams']['away']['name'])
-SoccerApi.display_remaining_games_for_a_team("Barcelona")
+#SoccerApi.display_remaining_games_for_a_team("Barcelona")
