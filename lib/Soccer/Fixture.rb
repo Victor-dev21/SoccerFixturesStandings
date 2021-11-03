@@ -1,18 +1,18 @@
 require_relative 'SoccerApi'
-class LaLiga
+class Fixture
 	attr_accessor :home_team, :away_team, :league_name, :league_id, :date
-	@@all_LaLiga_fixtures = []
+	@@all_fixtures = []
 	def initialize(home_team,away_team,league_name = "La Liga", league_id = 140, date)
 		@home_team = home_team
 		@away_team = away_team
 		@league_name = league_name
 		@league_id = league_id
 		@date = date
-		@@all_LaLiga_fixtures << self
+		@@all_fixtures << self
 	end
-	def self.all_LaLiga_fixtures
+	def self.all_fixtures
 		#self.create_matches_from_collection(league_id)
-		@@all_LaLiga_fixtures
+		@@all_fixtures
 	end
 
 	def self.create_matches_from_collection(league_id)
@@ -22,13 +22,13 @@ class LaLiga
 				home_team = team['teams']['home']['name']
 				away_team = team['teams']['away']['name']
 				date = team['fixture']['date'][0,10]
-				LaLiga.new(home_team,away_team,date)
+				Fixture.new(home_team,away_team,date)
 			end
 		end
 	end
 
 	def self.search_upcoming_fixtures_by_team(team_name)
-		fixtures = self.all_LaLiga_fixtures.select{|team|team.home_team == team_name || team.away_team == team_name}
+		fixtures = self.all_fixtures.select{|team|team.home_team == team_name || team.away_team == team_name}
 		fixtures.each do |match|
 		puts "#{match.home_team} vs #{match.away_team} : #{match.date}"
 		end
@@ -39,11 +39,11 @@ class LaLiga
 	end
 
 	def self.display_remaining_fixtures
-		self.all_LaLiga_fixtures.each do |match|
+		self.all_fixtures.each do |match|
 			puts "#{match.home_team} vs #{match.away_team} : #{match.date}"
 		end
 	end
 end
-LaLiga.create_matches_from_collection(SoccerApi::LaLiga)
-#LaLiga.display_remaining_fixtures
-LaLiga.search_upcoming_fixtures_by_team("Barcelona")
+Fixture.create_matches_from_collection(SoccerApi::LaLiga)
+#Fixture.display_remaining_fixtures
+Fixture.search_upcoming_fixtures_by_team("Real Madrid")

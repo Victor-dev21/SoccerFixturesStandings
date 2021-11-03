@@ -29,15 +29,15 @@ class Cli
 		input = gets.strip
 		if(input == "1")
 			puts"These are the latest fixtures La Liga fixtures for the upcoming week."
-			LaLiga.display_latest_fixtures(SoccerApi::LaLiga)
+			Fixture.display_latest_fixtures(SoccerApi::LaLiga)
 		elsif(input == "2")
 			puts"These are the latest fixtures La Liga fixtures for the upcoming week."
-			LaLiga.display_latest_fixtures(SoccerApi::Premier_League)
+			Fixture.display_latest_fixtures(SoccerApi::Premier_League)
 		elsif(input == "3")
 			puts"These are the latest fixtures La Liga fixtures for the upcoming week."
-			LaLiga.display_latest_fixtures(SoccerApi::SerieA)
+			Fixture.display_latest_fixtures(SoccerApi::SerieA)
 		elsif(input=="4")
-			LaLiga.display_latest_fixtures(SoccerApi::Bundesliga)
+			Fixture.display_latest_fixtures(SoccerApi::Bundesliga)
 		end
 	end
 
