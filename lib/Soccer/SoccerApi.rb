@@ -127,6 +127,18 @@ class SoccerApi
 		#display_fixtures(league)
 	end
 
+	def self.standings_by_league(league_id)
+		url = URI("https://api-football-v1.p.rapidapi.com/v3/standings?season=2021&league=#{league_id}")
+		response = SoccerApi.establish_connection(url)
+		standings =  response['response'][0]['league']['standings'][0]
+		puts"Current standings"
+		standings.each do |team|
+			print "#{team['rank']}:#{team['team']['name']}"
+			print "\t\tPoints:#{team['points']} Won: #{team['all']['win']}\tDraw: #{team['all']['draw']}\tLost: #{team['all']['lose']}"
+			puts
+		end
+	end
+
 	def self.sort_by_date
 
 	end
@@ -148,3 +160,4 @@ end
 #SoccerApi.fixtures_by_team("Barcelona")
 #SoccerApi.latest_fixtures_by_league(SoccerApi::LaLiga)
 #SoccerApi.all_fixtures_by_league(SoccerApi::LaLiga)
+ SoccerApi.standings_by_league(SoccerApi::LaLiga)

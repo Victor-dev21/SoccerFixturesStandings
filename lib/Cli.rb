@@ -1,21 +1,18 @@
 require_relative './Soccer/Fixture'
-require_relative './Formula1/F1'
 class Cli
 	def run
 		Fixture.create_matches_from_collection
-		FormulaOne.create_event_from_collection
 		display_options
 	end
 
 
 	def display_options
-		puts"Get upcoming fixtures for your favorite sport(s), favorite team(s), or your favorite soccer league(s)."
-		puts"Available sports: Soccer, Formula 1"
+		puts"Get upcoming fixtures for your favorite soccer team(s), or your favorite soccer league(s)."
 		puts"Please select a number:  "
 		puts"1. Get upcoming Soccer fixtures by league"
 		puts"2. Get the upcoming fixture for your favorite team"
 		puts"3. Get fixtures by date for all available sports"
-		puts"4. Get the next upcoming F1 race weekend dates"
+
 
 		input = gets.strip
 		if(input == "1")
@@ -28,7 +25,7 @@ class Cli
 	end
 
 	def option_1
-		puts "Select a league"
+		puts "Select a number for a league"
 		puts "1. La Liga"
 		puts "2. Premier League"
 		puts "3. Serie A"
@@ -59,8 +56,7 @@ class Cli
 		puts "Enter a date in the form of mm-dd-yyyy"
 		input = gets.strip
 		date = parse_date(input)
-		FormulaOne.find_event_by_date(date)
-		Fixture.search_fixtures_by_date(date.to_s)
+		Fixture.search_fixtures_by_date(date)
 	end
 
 	def parse_date(input)
@@ -68,7 +64,7 @@ class Cli
 		date = input[1].to_i
 		month = input[0].to_i
 		year = input[2].to_i
-		Date.new(year,month,date)
+		Date.new(year,month,date).to_s
 	end
 
 end

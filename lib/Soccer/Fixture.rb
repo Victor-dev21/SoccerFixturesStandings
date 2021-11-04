@@ -38,7 +38,7 @@ class Fixture
 		end
 	end
 	end
-	
+
 	def self.parse_date(input)
 		input = input.split("-")
 		date = input[1].to_i
@@ -59,7 +59,6 @@ class Fixture
 		puts "#{match.home_team} vs #{match.away_team} : #{match.date}"
 		end
 	end
-
 
 	def self.display_latest_fixtures(league_id)
 		SoccerApi.latest_fixtures_by_league(league_id)
