@@ -38,6 +38,14 @@ class Fixture
 		end
 	end
 	end
+	
+	def self.parse_date(input)
+		input = input.split("-")
+		date = input[1].to_i
+		month = input[0].to_i
+		year = input[2].to_i
+		Date.new(year,month,date).to_s
+	end
 
 	def self.search_upcoming_fixtures_by_team(team_name)
 		fixtures = self.all_fixtures.select{|team|team.home_team == team_name || team.away_team == team_name}
@@ -51,6 +59,7 @@ class Fixture
 		puts "#{match.home_team} vs #{match.away_team} : #{match.date}"
 		end
 	end
+
 
 	def self.display_latest_fixtures(league_id)
 		SoccerApi.latest_fixtures_by_league(league_id)

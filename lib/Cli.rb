@@ -1,7 +1,9 @@
 require_relative './Soccer/Fixture'
+require_relative './Formula1/F1'
 class Cli
 	def run
 		Fixture.create_matches_from_collection
+		FormulaOne.create_event_from_collection
 		display_options
 	end
 
@@ -57,7 +59,8 @@ class Cli
 		puts "Enter a date in the form of mm-dd-yyyy"
 		input = gets.strip
 		date = parse_date(input)
-		Fixture.search_fixtures_by_date(date)
+		FormulaOne.find_event_by_date(date)
+		Fixture.search_fixtures_by_date(date.to_s)
 	end
 
 	def parse_date(input)
@@ -65,7 +68,7 @@ class Cli
 		date = input[1].to_i
 		month = input[0].to_i
 		year = input[2].to_i
-		Date.new(year,month,date).to_s
+		Date.new(year,month,date)
 	end
 
 end
