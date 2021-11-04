@@ -4,16 +4,14 @@ require 'openssl'
 require 'json'
 require 'date'
 class SoccerApi
-	#url = URI("https://api-football-v1.p.rapidapi.com/v3/fixtures?date=2021-10-31&league=140&season=2021")
 	@@fixtures
 	@@teams
 	@@teams_to_id = Hash.new
-	@@top_four_leagues_id=[140,78,39,135]
 	LaLiga = 140
 	Premier_League = 39
 	Bundesliga = 78
 	SerieA = 135
-
+	@@top_four_leagues_id=[LaLiga,Bundesliga,Premier_League,SerieA]
 	def self.teams_to_id
 		@@teams_to_id
 	end
@@ -133,14 +131,9 @@ class SoccerApi
 		standings =  response['response'][0]['league']['standings'][0]
 		puts"Current standings"
 		standings.each do |team|
-			print "#{team['rank']}:#{team['team']['name']}"
-			print "\t\tPoints:#{team['points']} Won: #{team['all']['win']}\tDraw: #{team['all']['draw']}\tLost: #{team['all']['lose']}"
-			puts
+			puts "#{team['rank']}:#{team['team']['name']} \tPoints:#{team['points']} \t Won: #{team['all']['win']} \tDraw: #{team['all']['draw']} \tLost: #{team['all']['lose']}"
+
 		end
-	end
-
-	def self.sort_by_date
-
 	end
 end
 
@@ -160,4 +153,4 @@ end
 #SoccerApi.fixtures_by_team("Barcelona")
 #SoccerApi.latest_fixtures_by_league(SoccerApi::LaLiga)
 #SoccerApi.all_fixtures_by_league(SoccerApi::LaLiga)
- SoccerApi.standings_by_league(SoccerApi::LaLiga)
+#SoccerApi.standings_by_league(SoccerApi::Premier_League)

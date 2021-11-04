@@ -10,8 +10,8 @@ class Cli
 		puts"Get upcoming fixtures for your favorite soccer team(s), or your favorite soccer league(s)."
 		puts"Please select a number:  "
 		puts"1. Get upcoming Soccer fixtures by league"
-		puts"2. Get the upcoming fixture for your favorite team"
-		puts"3. Get fixtures by date for all available sports"
+		puts"2. Get the upcoming fixtures for your favorite team"
+		puts"3. Get fixtures by date for all leagues"
 
 
 		input = gets.strip
@@ -32,15 +32,16 @@ class Cli
 		puts "4. Bundesliga"
 		input = gets.strip
 		if(input == "1")
-			puts"These are the latest fixtures La Liga fixtures for the upcoming week."
+			puts"Upcoming fixtures for La Liga"
 			Fixture.display_latest_fixtures(SoccerApi::LaLiga)
 		elsif(input == "2")
-			puts"These are the latest fixtures La Liga fixtures for the upcoming week."
+			puts"Upcoming fixtures for the Premier League"
 			Fixture.display_latest_fixtures(SoccerApi::Premier_League)
 		elsif(input == "3")
-			puts"These are the latest fixtures La Liga fixtures for the upcoming week."
+			puts"Upcoming fixtures for Serie A"
 			Fixture.display_latest_fixtures(SoccerApi::SerieA)
 		elsif(input =="4")
+			puts"Upcoming fixtures for the Bundesligs"
 			Fixture.display_latest_fixtures(SoccerApi::Bundesliga)
 		end
 	end
