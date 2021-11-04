@@ -21,7 +21,7 @@ class SoccerApi
 
 
 	def self.establish_connection(url)
-		path = ENV['SOCCER_API']
+		path = ENV['SPORT_API']
 		api_key = File.open(path).read
 		http = Net::HTTP.new(url.host, url.port)
 		http.use_ssl = true
