@@ -41,7 +41,7 @@ class Cli
 			puts"Upcoming fixtures for Serie A"
 			Fixture.display_latest_fixtures(SoccerApi::SerieA)
 		elsif(input =="4")
-			puts"Upcoming fixtures for the Bundesligs"
+			puts"Upcoming fixtures for the Bundesliga"
 			Fixture.display_latest_fixtures(SoccerApi::Bundesliga)
 		end
 	end
