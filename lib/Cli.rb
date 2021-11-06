@@ -56,8 +56,8 @@ class Cli
 	def option_3
 		puts "Enter a date in the form of mm-dd-yyyy or enter q to quit"
 		input = gets.strip
-		date = parse_date(input)
 		if(input != "q")
+			date = parse_date(input)
 			Fixture.search_fixtures_by_date(date)
 			option_3
 		end

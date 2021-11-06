@@ -19,7 +19,7 @@ class Fixture
 	# create all remaining fixtures for all leagues
 	def self.create_matches_from_collection
 		SoccerApi.leagues_id.each do |league_id|
-		response = SoccerApi.reamining_fixtures_by_league(league_id)
+		response = SoccerApi.remaining_fixtures_by_league(league_id)
 		if(response['response'].length > 0 && response['response'][0] != nil)
 			response['response'].each do |team|
 				home_team = team['teams']['home']['name']
@@ -44,14 +44,14 @@ class Fixture
 	def self.search_upcoming_fixtures_by_team(team_name)
 		fixtures = self.all_fixtures.select{|team|team.home_team == team_name || team.away_team == team_name}
 		fixtures.each do |match|
-		puts "(#{match.league_name})#{match.home_team} vs #{match.away_team} : #{match.date}"
+		puts "#{match.league_name}:#{'%-16.20s' % match.home_team} vs #{'%-15.25s' % match.away_team}\t#{match.date}"
 		end
 	end
 
 	def self.search_fixtures_by_date(date)
 		fixtures = self.all_fixtures.select{|fixture|fixture.date == date}
 		fixtures.each do |match|
-		puts "(#{match.league_name}) #{match.home_team} vs #{match.away_team}"
+		puts "#{'%-20.35s' % match.league_name}: #{match.home_team} vs #{match.away_team}"
 		end
 	end
 

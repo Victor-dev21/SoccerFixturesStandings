@@ -100,7 +100,7 @@ class SoccerApi
 		url = URI("https://api-football-v1.p.rapidapi.com/v3/fixtures?league=#{league_id}&season=2021&round=#{current_round}")
 		display_fixtures(url)
 	end
-	def self.reamining_fixtures_by_league(league_id)
+	def self.remaining_fixtures_by_league(league_id)
 		current_season = Date.today.year
 		todays_date = Date.today.to_s
 		league = URI("https://api-football-v1.p.rapidapi.com/v3/fixtures?league=#{league_id}&season=#{current_season}&from=#{todays_date}&to=2022-06-05")
