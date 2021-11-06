@@ -18,7 +18,7 @@ class Fixture
 	end
 	# create all remaining fixtures for all leagues
 	def self.create_matches_from_collection
-		SoccerApi.top_leagues_id.each do |league_id|
+		SoccerApi.leagues_id.each do |league_id|
 		response = SoccerApi.reamining_fixtures_by_league(league_id)
 		if(response['response'].length > 0 && response['response'][0] != nil)
 			response['response'].each do |team|
@@ -47,6 +47,7 @@ class Fixture
 		puts "(#{match.league_name})#{match.home_team} vs #{match.away_team} : #{match.date}"
 		end
 	end
+
 	def self.search_fixtures_by_date(date)
 		fixtures = self.all_fixtures.select{|fixture|fixture.date == date}
 		fixtures.each do |match|
@@ -64,5 +65,3 @@ class Fixture
 		end
 	end
 end
-#Fixture.create_matches_from_collection
-#Fixture.standings_by_league(SoccerApi::Liga_MX)
