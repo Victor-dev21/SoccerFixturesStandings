@@ -1,4 +1,5 @@
 class ApiConnection
+
 	def self.establish_soccer_connection(url)
 		path = ENV['SOCCER_API']
 		api_key = File.open(path).read.strip
@@ -11,4 +12,5 @@ class ApiConnection
 		response = http.request(request)
 		response = JSON.parse(response.body.gsub("=>", ":").gsub(":nil,", ":null,"))
 	end
+
 end
