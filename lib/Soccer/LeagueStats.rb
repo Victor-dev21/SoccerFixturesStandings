@@ -31,7 +31,7 @@ class LeagueStats
 	end
 
 	def self.top_scorers_for_all_leagues
-		SoccerApi.leagues_id.each do |id|
+		SoccerApi.league_Ids.values.each do |id|
 			collection = SoccerApi.top_scorers_by_league(id)
 			store_player_and_goals(collection)
 		end

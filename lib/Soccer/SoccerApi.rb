@@ -3,7 +3,7 @@ require 'net/http'
 require 'openssl'
 require 'json'
 require 'date'
-require_relative '../ApiConnection'
+require_relative '../APIS/ApiConnection'
 class SoccerApi
 	@@fixtures
 	@@teams
@@ -24,7 +24,10 @@ class SoccerApi
 		@@leagues_id
 	end
 
-
+	@@league_Ids = {LaLiga: 140, Premier: 39, BundesLiga: 78, SerieA: 135, MLS:253, Liga_Mx:262, Ligue_1: 61}
+	def self.league_Ids
+		@@league_Ids
+	end
 
 	# date parameter format: "year-month-day"
 	def self.fixtures(date,league_id)
@@ -42,7 +45,7 @@ class SoccerApi
 	end
 	# fixtures is a url endpoint
 	def self.display_fixtures(endpoint)
-		response = ApiConnection.establish_connection(endpoint)
+		response = ApiConnection.establish_soccer_connection(endpoint)
 		if(response['response'].length > 0 && response['response'][0] != nil)
 			puts response['response'][0]['league']['name']
 			response['response'].each do |team|
@@ -67,7 +70,7 @@ class SoccerApi
 	end
 
 	def self.create_hash_for_teams_id(teams_by_league_url)
-		response = ApiConnection.establish_connection(teams_by_league_url)
+		response = ApiConnection.establish_soccer_connection(teams_by_league_url)
 		response['response'].each do |team|
 			@@teams_to_id[team['team']['name']] = team['team']['id']
 		end
@@ -95,29 +98,30 @@ class SoccerApi
 	end
 	def self.latest_fixtures_by_league(league_id)
 		current_season = Date.today.year
-		current_round = URI("https://api-football-v1.p.rapidapi.com/v3/fixtures/rounds?league=#{league_id}&season=2021&current=true")
-		current_round = ApiConnection.establish_connection(current_round)['response'][0]
+		current_round = URI("https://api-football-v1.p.rapidapi.com/v3/fixtures/rounds?league=#{league_id}&season=#{current_season}&current=true")
+		current_round = ApiConnection.establish_soccer_connection(current_round)['response'][0]
 		url = URI("https://api-football-v1.p.rapidapi.com/v3/fixtures?league=#{league_id}&season=2021&round=#{current_round}")
 		display_fixtures(url)
 	end
+
 	def self.remaining_fixtures_by_league(league_id)
 		current_season = Date.today.year
 		todays_date = Date.today.to_s
 		league = URI("https://api-football-v1.p.rapidapi.com/v3/fixtures?league=#{league_id}&season=#{current_season}&from=#{todays_date}&to=2022-06-05")
-		ApiConnection.establish_connection(league)
+		ApiConnection.establish_soccer_connection(league)
 		#display_fixtures(league)
 	end
 
 	def self.standings_by_league(league_id)
 		url = URI("https://api-football-v1.p.rapidapi.com/v3/standings?season=2021&league=#{league_id}")
-		response = ApiConnection.establish_connection(url)
+		response = ApiConnection.establish_soccer_connection(url)
 		standings =  response['response'][0]['league']['standings'][0]
 	end
 
 
 	def self.top_scorers_by_league(league_id)
 		url = URI("https://api-football-v1.p.rapidapi.com/v3/players/topscorers?league=#{league_id}&season=2021")
-		response = ApiConnection.establish_connection(url)
+		response = ApiConnection.establish_soccer_connection(url)
 		response['response']
 	end
 end
