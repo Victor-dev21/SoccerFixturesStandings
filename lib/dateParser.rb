@@ -16,6 +16,27 @@ class DateParser
 		year = input[2].to_i
 		Date.new(year,month,date)
 	end
+
+  def self.user_friendly_date(date)
+    day = date.day
+    year = date.year
+    month = date.month
+    "#{month}/#{day}/#{year}"
+  end
+
+  def self.parse_time(time)
+  time = time.split(":")[0].to_i - 4
+  eventTime = ""
+  if(time > 12)
+    time = time-12
+    eventTime = "#{time}:00pm est"
+  elsif((time-12) == 0 && time !=0)
+    eventTime = "#{time}:00pm est"
+  elsif(time == 0)
+    eventTime = "12:00am est"
+  else
+    eventTime = "#{time}:00am est"
+  end
+    eventTime
+  end
 end
-puts DateParser.parse_date("2022-03-20")
-puts DateParser.parse_input_date("03-20-2022") == DateParser.parse_date("2022-03-20")
