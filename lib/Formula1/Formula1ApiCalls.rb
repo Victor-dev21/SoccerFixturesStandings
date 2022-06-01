@@ -4,11 +4,12 @@ require 'openssl'
 require 'json'
 require 'date'
 require_relative "../DateParser"
-class ApiCalls
+class Formula1ApiCalls
 
   @@standings = Hash.new
   @@current_round = 0
   @@schedule = Hash.new
+
   def self.standings
     @@standings
   end
@@ -25,7 +26,7 @@ class ApiCalls
     json = JSON.parse(response)
     @@current_round = json["MRData"]["StandingsTable"]["StandingsLists"][0]["round"]
     json["MRData"]["StandingsTable"]["StandingsLists"][0]["DriverStandings"].each do |driver|
-      self.standings[driver["position"]] = "#{driver["Driver"]["givenName"]} #{driver["Driver"]["familyName"]}"
+      self.standings[driver["position"]] = ["#{driver["Driver"]["givenName"]} #{driver["Driver"]["familyName"]}",driver["wins"],driver["points"]]
     end
     self.standings
   end
@@ -34,16 +35,19 @@ class ApiCalls
     response = File.read(URI.open("http://ergast.com/api/f1/current.json"))
     json = JSON.parse(response)
     json["MRData"]["RaceTable"]["Races"].each do |race|
-      self.schedule[race["raceName"]] = Array.new
-      self.schedule[race["raceName"]] << {FirstPractice: DateParser.parse_date(race["FirstPractice"]["date"])}
-      self.schedule[race["raceName"]] << {SecondPractice: DateParser.parse_date(race["SecondPractice"]["date"])}
-      if(race["ThirdPractice"].nil?)
-        self.schedule[race["raceName"]] << {ThirdPractice: DateParser.parse_date(race["Sprint"]["date"])}
-      else
-        self.schedule[race["raceName"]] << {ThirdPractice: DateParser.parse_date(race["ThirdPractice"]["date"])}
+
+      if(Date.today  <= DateParser.parse_date(race["FirstPractice"]["date"]))
+        self.schedule[race["raceName"]] = Array.new
+        self.schedule[race["raceName"]] << {FirstPractice: DateParser.parse_date(race["FirstPractice"]["date"])}
+        self.schedule[race["raceName"]] << {SecondPractice: DateParser.parse_date(race["SecondPractice"]["date"])}
+        if(race["ThirdPractice"].nil?)
+          self.schedule[race["raceName"]] << {ThirdPractice: DateParser.parse_date(race["Sprint"]["date"])}
+        else
+          self.schedule[race["raceName"]] << {ThirdPractice: DateParser.parse_date(race["ThirdPractice"]["date"])}
+        end
+        self.schedule[race["raceName"]] << {Qualifying: DateParser.parse_date(race["Qualifying"]["date"])}
+        self.schedule[race["raceName"]] << {RaceDay: DateParser.parse_date(race["date"])}
       end
-      self.schedule[race["raceName"]] << {Qualifying: DateParser.parse_date(race["Qualifying"]["date"])}
-      self.schedule[race["raceName"]] << {RaceDay: DateParser.parse_date(race["date"])}
     end
     self.schedule
   end
@@ -65,11 +69,10 @@ class ApiCalls
     eventName = ""
     raceName = ""
     self.schedule.find do |key,event|
-      raceName =  key
-      eventName = event.find do |e|
-         e.values[0] = input
+      raceName = key
+      eventName = event.find do |eventDate|
+         eventDate.values[0] = input
       end
-
     end
     "#{raceName}: #{eventName.keys[0]}"
   end
@@ -81,6 +84,4 @@ end
 #{:Qualifying=>#<Date: 2022-03-19 ((2459658j,0s,0n),+0s,2299161j)>},
 #{:RaceDay=>#<Date: 2022-03-20 ((2459659j,0s,0n),+0s,2299161j)>}]
 
-
-puts ApiCalls.upcoming_race_weekends
-puts ApiCalls.search_by_date("03-18-2022")
+puts Formula1ApiCalls.upcoming_race_weekends

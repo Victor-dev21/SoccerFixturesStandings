@@ -3,7 +3,7 @@ require 'net/http'
 require 'openssl'
 require 'json'
 require 'date'
-require_relative '../APIS/ApiConnection'
+require_relative './ApiConnection'
 class SoccerApi
 	@@fixtures
 	@@teams
