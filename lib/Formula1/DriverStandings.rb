@@ -1,3 +1,0 @@
-class DriverStandings
-  
-end
