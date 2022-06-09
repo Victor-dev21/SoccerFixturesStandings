@@ -1,10 +1,27 @@
 require_relative './Connection.rb'
+require_relative './Teams.rb'
 class BaseballApi
-  def self.baseball_team_standings
-    response = Connection.establish_connection(URI("https://api-baseball.p.rapidapi.com/standings?league=1&stage=MLB%20-%20Regular%20Season&season=2022"))
+  
+  def self.fetch_all_divisions
+    divisions = {"AL": ["East","Central","West"],"NL": ["East","Central","West"]}
+    divisions.each do |league,division|
+      division.each do |div|
+        response = Connection.establish_connection(URI("https://api-baseball.p.rapidapi.com/standings?group=#{league}%20#{div}&league=1&season=2022"))
+        Teams.create_from_collection(response['response']);
+      end
+    end
   end
 
-  def self.standings_by_division
-    url = Connection.establish_connection(URI("https://api-baseball.p.rapidapi.com/standings?group=AL%20East&league=1&season=2022"))
+  def self.all_divisions
+    #self.american_league_east
+    #self.american_league_west
+    #self.american_league_central
+    #self.national_league_east
+    #self.national_league_west
+    #self.national_league_central
+    self.fetch_all_divisions
   end
 end
+#BaseballApi.american_league_central
+#puts Teams.all[0].team_name
+#puts Connection.establish_connection(URI("https://api-baseball.p.rapidapi.com/standings?group=NL%20East&league=1&season=2022"))
