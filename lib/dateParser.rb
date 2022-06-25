@@ -24,6 +24,11 @@ class DateParser
     "#{month}/#{day}/#{year}"
   end
 
+  def self.next_three_dates
+  day = today = Date.today.prev_day
+  (0..2).map{|d|day = day.next.to_s}
+  end
+
   def self.parse_time(time)
   time = time.split(":")[0].to_i - 4
   eventTime = ""

@@ -2,66 +2,67 @@ require_relative 'SoccerApi'
 class Fixture
 	attr_accessor :home_team, :away_team, :league_name, :league_id, :date
 	@@all_fixtures = []
-
-	def initialize(home_team,away_team,league_name, league_id, date)
-		@home_team = home_team
-		@away_team = away_team
-		@league_name = league_name
-		@league_id = league_id
-		@date = date
+	def initialize(hash)
+		@home_team = hash['teams']['home']['name']
+		@away_team = hash['teams']['away']['name']
+		@league_name = hash['league']['name']
+		@league_id = hash['league']['id']
+		@date = hash['fixture']['date'][0,10]
 		@@all_fixtures << self
 	end
 
 	def self.all_fixtures
-		#self.create_matches_from_collection(league_id)
 		@@all_fixtures
 	end
 	# create all remaining fixtures for all leagues
 	def self.create_matches_from_collection
-		SoccerApi.leagues_id.each do |league_id|
-		response = SoccerApi.remaining_fixtures_by_league(league_id)
-		if(response['response'].length > 0 && response['response'][0] != nil)
-			response['response'].each do |team|
-				home_team = team['teams']['home']['name']
-				away_team = team['teams']['away']['name']
-				date = team['fixture']['date'][0,10]
-				league_id = team['league']['id']
-				league_name = team['league']['name']
-				Fixture.new(home_team,away_team,league_name,league_id,date)
+		SoccerApi.leagues.values.each do |league_id|
+			response = SoccerApi.remaining_fixtures_by_league(league_id)
+			if(response['response'].length > 0 && response['response'][0] != nil)
+				response['response'].each do |fixture|
+					Fixture.new(fixture)
+				end
 			end
 		end
 	end
-	end
-
-	def self.parse_date(input)
-		input = input.split("-")
-		date = input[1].to_i
-		month = input[0].to_i
-		year = input[2].to_i
-		Date.new(year,month,date).to_s
-	end
 
 	def self.search_upcoming_fixtures_by_team(team_name)
-		fixtures = self.all_fixtures.select{|team|team.home_team == team_name || team.away_team == team_name}
-		fixtures.each do |match|
-		puts "#{match.league_name}:#{'%-16.20s' % match.home_team} vs #{'%-15.25s' % match.away_team}\t#{match.date}"
-		end
+		fixtures = self.all_fixtures.select{|team|team.home_team.include?(team_name) || team.away_team.include?(team_name)}
+		self.display_fixtures(fixtures)
 	end
 
 	def self.search_fixtures_by_date(date)
 		fixtures = self.all_fixtures.select{|fixture|fixture.date == date}
-		fixtures.each do |match|
-		puts "#{'%-20.35s' % match.league_name}: #{match.home_team} vs #{match.away_team}"
-		end
+		self.display_fixtures(fixtures)
 	end
-
-	def self.display_latest_fixtures(league_id)
-		SoccerApi.latest_fixtures_by_league(league_id)
+	#**** does not work with world cup id
+	def self.fixtures_by_league(league_id)
+		self.all_fixtures.select{|fixture|fixture.league_id == league_id}
 	end
 
 	def self.display_remaining_fixtures
-		self.all_fixtures.each do |match|
-			puts "#{match.home_team} vs #{match.away_team} : #{match.date}"
+		self.display_fixtures(self.all_fixtures)
+	end
+	#refactor if this could be removed
+	#this shows the current this weeks games
+	def self.display_current_round_fixtures(league_id)
+		response = SoccerApi.latest_fixtures_by_league(league_id)
+		#display_fixtures(response['response'])
+		if(response['response'].length > 0 && response['response'][0] != nil)
+			response['response'].each do |match|
+				puts "#{match['teams']['home']['name'].ljust(13)} vs #{match['teams']['away']['name'].ljust(13)} #{match['fixture']['date'][0,10]} "
+			end
+		end
+	end
+
+	def self.display_fixtures(fixtures)
+		fixtures.each do |match|
+			puts "#{match.home_team.ljust(10)} vs #{match.away_team.ljust(10)} #{match.date}"
 		end
 	end
 end
+#Fixture.create_matches_from_collection
+#Fixture.all_fixtures
+#Fixture.search_upcoming_fixtures_by_team("Orlando City")
+#Fixture.search_upcoming_fixtures_by_team("Mexico")
+#p Fixture.fixtures_by_league(1)

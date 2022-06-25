@@ -15,6 +15,7 @@ class FormatData
   end
 
   def self.format_constructors
+    Formula1Api.constructors
     Formula1Api.constructors_standings.each do |key,team|
       puts "#{key}.#{team[:name].ljust(20)} Points:#{team[:points]} Wins:#{team[:wins]} "
     end
@@ -52,7 +53,7 @@ class FormatData
     Formula1Api.schedule.each do |grandPrixName,weekend|
       print_name = true
       self.sort_event_dates(weekend).each do |event|
-        if Date::MONTHNAMES[event.values.first.month] == month.strip
+        if Date::MONTHNAMES[event.values.first.month].downcase == month.downcase.strip
           puts "#{grandPrixName}" if print_name
           puts format_event_time(event)
           print_name = nil

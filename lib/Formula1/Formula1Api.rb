@@ -49,7 +49,7 @@ class Formula1Api
     response = File.read(URI.open('http://ergast.com/api/f1/current.json'))
     json = JSON.parse(response)
     json['MRData']['RaceTable']['Races'].each do |race|
-      if(Date.today  <= DateParser.parse_date(race['FirstPractice']['date']))
+      if(Date.today  < DateParser.parse_date(race['date']))
         self.schedule[race['raceName']] = []
         self.first_practice(race)
         self.second_practice(race)
@@ -62,6 +62,7 @@ class Formula1Api
     self.schedule
   end
   #helper methods
+
   def self.first_practice(race)
       self.schedule[race['raceName']] << {FirstPractice: DateParser.parse_date(race['FirstPractice']['date']), time: race['FirstPractice']['time']}
   end
@@ -69,6 +70,7 @@ class Formula1Api
   def self.second_practice(race)
     self.schedule[race['raceName']] << {SecondPractice: DateParser.parse_date(race['SecondPractice']['date']), time: race['SecondPractice']['time']}
   end
+
   def self.third_practice(race)
     if(!race['ThirdPractice'].nil?)
       self.schedule[race['raceName']] << {ThirdPractice: DateParser.parse_date(race['ThirdPractice']['date']), time: race['ThirdPractice']['time']}
