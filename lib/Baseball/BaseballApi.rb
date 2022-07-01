@@ -1,4 +1,4 @@
-require_relative './Connection.rb'
+
 require_relative './Teams.rb'
 require_relative '../DateParser'
 require_relative '../api_connect.rb'
