@@ -55,12 +55,3 @@ class SoccerApi < ApiConnect
 
 	end
 end
-#p SoccerApi.soccer_api_call(URI("https://api-football-v1.p.rapidapi.com/v3/fixtures?league=#{39}&season=2022"))
-#LaLiga: 140
-#Premier: 39
-#BundesLiga: 78
-#SerieA: 135
-#MLS: 253
-#Liga_Mx: 262
-#Ligue_1: 61
-#p SoccerApi.remaining_fixtures_by_league(39)

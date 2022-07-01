@@ -11,7 +11,6 @@ class BaseballUI
       Teams.display_teams
     elsif(input =="2")
       option_2
-      #puts BaseballApi.fetch_games_by_team(input)
     end
   end
   def option_1
@@ -28,7 +27,6 @@ class BaseballUI
   def self.display_team_games(name)
     games = BaseballApi.fetch_games_by_team(name)
     games.each do |game|
-      #try game['response'][0] maybe try bottome again
       if(!game['response'][0].nil?)
       puts "#{game['response'][0]['teams']['away']['name']} @ #{game['response'][0]['teams']['home']['name']} #{DateParser.user_friendly_date(DateParser.parse_date(game['response'][0]['date'].split("T")[0]))}"
     end

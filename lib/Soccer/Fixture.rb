@@ -61,8 +61,3 @@ class Fixture
 		end
 	end
 end
-#Fixture.create_matches_from_collection
-#Fixture.all_fixtures
-#Fixture.search_upcoming_fixtures_by_team("Orlando City")
-#Fixture.search_upcoming_fixtures_by_team("Mexico")
-#p Fixture.fixtures_by_league(1)
