@@ -23,7 +23,7 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+TODO: You will need to create a rapidApi account to get an api key and paste the api key into the APIconnect class where indicated.
 
 ## Development
 
