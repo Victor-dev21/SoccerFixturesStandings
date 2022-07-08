@@ -1,10 +1,7 @@
 # SportSchedule
 <<<<<<< HEAD
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/SportSchedule`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
-
+The app allows you to view upcoming fixtures for soccer, baseball and formula1. The user is also able to view current standings of each sport.
 ## Installation
 
 Add this line to your application's Gemfile:
