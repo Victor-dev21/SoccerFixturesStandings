@@ -1,6 +1,6 @@
 require_relative './Formula1Api'
 require 'date'
-require 'pry'
+
 class FormatData
 
   def self.format_standings
@@ -15,8 +15,7 @@ class FormatData
   end
 
   def self.format_constructors
-    Formula1Api.constructors
-    Formula1Api.constructors_standings.each do |key,team|
+    Formula1Api.constructors.each do |key,team|
       puts "#{key}.#{team[:name].ljust(20)} Points:#{team[:points]} Wins:#{team[:wins]} "
     end
   end

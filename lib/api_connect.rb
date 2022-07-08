@@ -1,7 +1,9 @@
 class ApiConnect
   def self.api_connection(url)
 		path = ENV['SOCCER_API']
-		api_key = File.open(path).read.strip
+    api_key = File.open(path).read.strip
+    #comment out the above the two lines and uncomment the one below
+    #path = ENV['YOUR_API_KEY_HERE']
 		http = Net::HTTP.new(url.host, url.port)
 		http.use_ssl = true
 		http.verify_mode = OpenSSL::SSL::VERIFY_NONE
